@@ -14,7 +14,7 @@ const App = () => {
   renderer.link = function(href,title,markdown){
     return `<a target="_blank" href="${href}">${markdown}</a>`
   }
-  const [markdown,setMarkdown] = useState(`
+  const context =  `
   # Welcome to my React Markdown Previewer!
 
   ## This is a sub-heading...
@@ -58,8 +58,8 @@ const App = () => {
   1. And last but not least, let's not forget embedded images:
   
   ![freeCodeCamp Logo](https://cdn.freecodecamp.org/testable-projects-fcc/images/fcc_secondary.svg)
-  
-  `)
+  `
+  const [markdown,setMarkdown] = useState(context)
   const [toggleEditor,setToggleEditor] = useState(false)
   const [togglePreview,setTogglePreview] = useState(false)
   
@@ -78,7 +78,7 @@ const App = () => {
         <h1 className='flex items-center gap-3 text-2xl font-bold'><FaFreeCodeCamp/>Editor</h1>
         <button onClick={handleEdite}>
           {
-            toggleEditor ? (
+            !toggleEditor ? (
               <BsArrowsFullscreen id='editorfull' className='icon'/>
             ) : (
               <BsArrowsAngleContract id='editorangle' className='icon'/>
@@ -86,10 +86,10 @@ const App = () => {
           }
         </button>
       </div>
-        <textarea id="editor" className={toggleEditor ? 'px-5 py-2' : 'maxi'} value={markdown} onChange={(e)=>setMarkdown(e.target.value)} type='text'>
+      <textarea id="editor" className={!toggleEditor ? 'px-5 py-2' : 'maxi'} value={markdown} onChange={(e)=>setMarkdown(e.target.value)} type='text'>
         </textarea>
     </div>
-    <div id='previewwrap' className={!toggleEditor  && 'hidden'}>
+    <div id='previewwrap' className={toggleEditor  && 'hidden'}>
     <div className="toolbar">
         <h1 className=''><FaFreeCodeCamp/>Preview</h1>
         <button onClick={handlePreview}>
