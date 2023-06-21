@@ -61,73 +61,57 @@ const App = () => {
   
   `)
   const [toggleEditor,setToggleEditor] = useState(false)
-  var editor = document.getElementById("editorwrap")
-  var editorfull = document.getElementById('editorfull')
-  var editorangle = document.getElementById('editorangle')
-  var preview = document.getElementById("preview")
-  var previewfull = document.getElementById("previewfull")
-  var previewangle = document.getElementById("previewangle")
+  const [togglePreview,setTogglePreview] = useState(false)
+  
   const handleEdite = ()=>{
-      preview.classList.add('hidden')
-      editorfull.classList.add('hidden')
-      editorangle.classList.remove('hidden')
-      editor.classList.add('maxi')
-      setToggleEditor(true)
-      if(toggleEditor){
-        preview.classList.remove('hidden')
-        editor.classList.remove('maxi')
-        editorfull.classList.remove('hidden')
-        editorangle.classList.add('hidden')
-        setToggleEditor(false)
-      }
- 
-      console.log(editorangle);
+    toggleEditor ? setToggleEditor(false) : setToggleEditor(true)
   }
   const handlePreview = ()=>{
-    editor.classList.add('hidden')
-    previewfull.classList.add('hidden')
-    previewangle.classList.remove('hidden')
-    setToggleEditor(true)
-    if(toggleEditor){
-      editor.classList.remove('hidden')
-      previewfull.classList.remove('hidden')
-      previewangle.classList.add('hidden')
-      setToggleEditor(false)
+    togglePreview? setTogglePreview(false) : setTogglePreview(true)
+   
     }
-
-  }
 
   return (
     <div id='markdown'>
-    <div id='editorwrap' className='flex flex-col mx-auto w-[40%]'>
+    <div id='editorwrap' className={togglePreview && 'hidden'}>
       <div className="toolbar">
         <h1 className='flex items-center gap-3 text-2xl font-bold'><FaFreeCodeCamp/>Editor</h1>
         <button onClick={handleEdite}>
-        <BsArrowsFullscreen id='editorfull' className='icon'/>
-        <BsArrowsAngleContract id='editorangle' className='icon hidden'/>
+          {
+            toggleEditor ? (
+              <BsArrowsFullscreen id='editorfull' className='icon'/>
+            ) : (
+              <BsArrowsAngleContract id='editorangle' className='icon'/>
+            )
+          }
         </button>
       </div>
-        <textarea id="editor" className='px-5 py-2' value={markdown} onChange={(e)=>setMarkdown(e.target.value)} type='text'>
+        <textarea id="editor" className={toggleEditor ? 'px-5 py-2' : 'maxi'} value={markdown} onChange={(e)=>setMarkdown(e.target.value)} type='text'>
         </textarea>
     </div>
-    <div id='previewwrap'>
+    <div id='previewwrap' className={!toggleEditor  && 'hidden'}>
     <div className="toolbar">
         <h1 className=''><FaFreeCodeCamp/>Preview</h1>
         <button onClick={handlePreview}>
-        <BsArrowsFullscreen id='previewfull' className='icon'/>
-        <BsArrowsAngleContract id='previewangle' className='icon hidden'/>        
+          {
+            !togglePreview ? (
+              <BsArrowsFullscreen id='previewfull' className='icon'/>
+            ) : (
+              <BsArrowsAngleContract id='previewangle' className='icon'/>        
+            )
+          }
         </button>
       </div>
       <article >
-        <div id='preview' dangerouslySetInnerHTML={{
+        <div id='preview' className={!togglePreview && 'maxi'} dangerouslySetInnerHTML={{
         __html:marked(markdown, {renderer : renderer})
       }}>
+
         </div>
       </article>
     </div>
     </div>
   )
 }
-
 
 export default App
